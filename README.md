@@ -564,4 +564,5 @@ func (c *Controller) enqueueNetworkForDelete(obj interface{}) {
 
 ```bash
 go build -o samplecrd-controller
+./samplecrd-controller -kubeconfig=$HOME/.kube/config -alsologtostderr=true
 ```
