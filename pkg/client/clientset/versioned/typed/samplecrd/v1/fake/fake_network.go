@@ -19,7 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	samplecrdv1 "github.com/resouer/k8s-controller-custom-resource/pkg/apis/samplecrd/v1"
+	"context"
+
+	samplecrdv1 "github.com/guoyul/k8s-controller-custom-resource/pkg/apis/samplecrd/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -39,7 +41,7 @@ var networksResource = schema.GroupVersionResource{Group: "samplecrd.k8s.io", Ve
 var networksKind = schema.GroupVersionKind{Group: "samplecrd.k8s.io", Version: "v1", Kind: "Network"}
 
 // Get takes name of the network, and returns the corresponding network object, and an error if there is any.
-func (c *FakeNetworks) Get(name string, options v1.GetOptions) (result *samplecrdv1.Network, err error) {
+func (c *FakeNetworks) Get(ctx context.Context, name string, options v1.GetOptions) (result *samplecrdv1.Network, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(networksResource, c.ns, name), &samplecrdv1.Network{})
 
@@ -50,7 +52,7 @@ func (c *FakeNetworks) Get(name string, options v1.GetOptions) (result *samplecr
 }
 
 // List takes label and field selectors, and returns the list of Networks that match those selectors.
-func (c *FakeNetworks) List(opts v1.ListOptions) (result *samplecrdv1.NetworkList, err error) {
+func (c *FakeNetworks) List(ctx context.Context, opts v1.ListOptions) (result *samplecrdv1.NetworkList, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(networksResource, networksKind, c.ns, opts), &samplecrdv1.NetworkList{})
 
@@ -72,14 +74,14 @@ func (c *FakeNetworks) List(opts v1.ListOptions) (result *samplecrdv1.NetworkLis
 }
 
 // Watch returns a watch.Interface that watches the requested networks.
-func (c *FakeNetworks) Watch(opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeNetworks) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(networksResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a network and creates it.  Returns the server's representation of the network, and an error, if there is any.
-func (c *FakeNetworks) Create(network *samplecrdv1.Network) (result *samplecrdv1.Network, err error) {
+func (c *FakeNetworks) Create(ctx context.Context, network *samplecrdv1.Network, opts v1.CreateOptions) (result *samplecrdv1.Network, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewCreateAction(networksResource, c.ns, network), &samplecrdv1.Network{})
 
@@ -90,7 +92,7 @@ func (c *FakeNetworks) Create(network *samplecrdv1.Network) (result *samplecrdv1
 }
 
 // Update takes the representation of a network and updates it. Returns the server's representation of the network, and an error, if there is any.
-func (c *FakeNetworks) Update(network *samplecrdv1.Network) (result *samplecrdv1.Network, err error) {
+func (c *FakeNetworks) Update(ctx context.Context, network *samplecrdv1.Network, opts v1.UpdateOptions) (result *samplecrdv1.Network, err error) {
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateAction(networksResource, c.ns, network), &samplecrdv1.Network{})
 
@@ -101,7 +103,7 @@ func (c *FakeNetworks) Update(network *samplecrdv1.Network) (result *samplecrdv1
 }
 
 // Delete takes name of the network and deletes it. Returns an error if one occurs.
-func (c *FakeNetworks) Delete(name string, options *v1.DeleteOptions) error {
+func (c *FakeNetworks) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
 		Invokes(testing.NewDeleteAction(networksResource, c.ns, name), &samplecrdv1.Network{})
 
@@ -109,17 +111,17 @@ func (c *FakeNetworks) Delete(name string, options *v1.DeleteOptions) error {
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeNetworks) DeleteCollection(options *v1.DeleteOptions, listOptions v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(networksResource, c.ns, listOptions)
+func (c *FakeNetworks) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(networksResource, c.ns, listOpts)
 
 	_, err := c.Fake.Invokes(action, &samplecrdv1.NetworkList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched network.
-func (c *FakeNetworks) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *samplecrdv1.Network, err error) {
+func (c *FakeNetworks) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *samplecrdv1.Network, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(networksResource, c.ns, name, data, subresources...), &samplecrdv1.Network{})
+		Invokes(testing.NewPatchSubresourceAction(networksResource, c.ns, name, pt, data, subresources...), &samplecrdv1.Network{})
 
 	if obj == nil {
 		return nil, err

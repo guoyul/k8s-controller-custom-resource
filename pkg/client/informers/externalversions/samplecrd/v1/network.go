@@ -19,12 +19,13 @@ limitations under the License.
 package v1
 
 import (
+	"context"
 	time "time"
 
-	samplecrdv1 "github.com/resouer/k8s-controller-custom-resource/pkg/apis/samplecrd/v1"
-	versioned "github.com/resouer/k8s-controller-custom-resource/pkg/client/clientset/versioned"
-	internalinterfaces "github.com/resouer/k8s-controller-custom-resource/pkg/client/informers/externalversions/internalinterfaces"
-	v1 "github.com/resouer/k8s-controller-custom-resource/pkg/client/listers/samplecrd/v1"
+	samplecrdv1 "github.com/guoyul/k8s-controller-custom-resource/pkg/apis/samplecrd/v1"
+	versioned "github.com/guoyul/k8s-controller-custom-resource/pkg/client/clientset/versioned"
+	internalinterfaces "github.com/guoyul/k8s-controller-custom-resource/pkg/client/informers/externalversions/internalinterfaces"
+	v1 "github.com/guoyul/k8s-controller-custom-resource/pkg/client/listers/samplecrd/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -61,13 +62,13 @@ func NewFilteredNetworkInformer(client versioned.Interface, namespace string, re
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SamplecrdV1().Networks(namespace).List(options)
+				return client.SamplecrdV1().Networks(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SamplecrdV1().Networks(namespace).Watch(options)
+				return client.SamplecrdV1().Networks(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&samplecrdv1.Network{},
